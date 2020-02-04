@@ -1,15 +1,14 @@
 import React from 'react';
-import Main from './main/Main'
-
+import Routes from './routes'
 import './App.css'
 
 function App() {
   return (
-    <div className="App">
-      <Main />
+    <div className="container">
+      <Routes />
     </div>
   )
+ 
 }
 
 export default App
-

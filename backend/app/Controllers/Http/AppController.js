@@ -1,8 +1,8 @@
 'use strict'
 
 class AppController {
-    index() {
-        return 'Hello world'
+    index () {
+        return 'Hello Dev'
     }
 }
 
