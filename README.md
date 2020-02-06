@@ -13,6 +13,15 @@
 - React.js
 - Banco de Dados SQL
 
+## Tecnologias usadas
+
+- Node.js
+- Adonis.js
+- PostgreSQL
+- React.js
+- Axios
+- Styled-components
+
 ### Run
 
 1 - Clone o repositório `https://github.com/jonyreis/find-music`
