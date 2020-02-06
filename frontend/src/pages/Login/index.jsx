@@ -1,69 +1,61 @@
-import React from 'react'
+import React, { Component } from "react"
+import { Link, withRouter } from "react-router-dom"
 
-import { ErrorMessage, Formik, Form, Field } from 'formik'
-import * as yup from 'yup'
-import api from '../../services/api'
+import api from "../../services/api"
+import { login } from "../../services/auth"
 
-import './styles.css'
+import { Form, Container } from "./styles"
 
-export default function Login({ history }) {
+class Login extends Component {
+  state = {
+    email: "",
+    password: "",
+    error: ""
+  }
 
-    const handleSubmit = values => {
-        api.post('/authenticate', values)
-            .then(resp => {
-                const { data } = resp
-                if (data) {
-                    localStorage.setItem('token', data)
-                    history.push('/home')
-                }
-            })
+  handleSignIn = async e => {
+    e.preventDefault()
+    const { email, password } = this.state
+    if (!email || !password) {
+      this.setState({ error: "Preencha e-mail e senha para continuar!" })
+    } else {
+      try {
+        const response = await api.post("/", { email, password })
+        login(response.data.token)
+        this.props.history.push("/home")
+      } catch (err) {
+        this.setState({
+          error:
+            "Erro"
+        })
+      }
     }
+  }
 
-    const validations = yup.object().shape({
-        email: yup.string().email().required(),
-        password: yup.string().min(6).required()
-    })
+  render() {
     return (
-        <>
-            <Formik
-                initialValues={{}}
-                onSubmit={handleSubmit}
-                validationSchema={validations}
-            >
-                <Form className="login">
-                    <strong>Login</strong>
-                    <div className="login-group">
-                        <label>E-mail</label>
-                        <Field
-                            name="email"
-                            placeholder="Digite seu e-mail..."
-                            className="login-field"
-                        />
-                        <ErrorMessage
-                            component="span"
-                            name="email"
-                            className="login-error"
-                        />
-                    </div>
-                    <div className="login-group">
-                        <label>Senha</label>
-                        <Field
-                            type="password"
-                            name="password"
-                            placeholder="Digite sua senha..."
-                            className="login-field"
-                        />
-                        <ErrorMessage
-                            component="span"
-                            name="password"
-                            className="login-error"
-                        />
-                    </div>
-
-                    <a href="/register">Registre-se</a>
-                    <button className="btn" type="submit">Login</button>
-                </Form>
-            </Formik>
-        </>
+      <Container>
+        <Form onSubmit={this.handleSignIn}>
+          <h1>Find Music</h1>
+          {this.state.error && <p>{this.state.error}</p>}
+          <label htmlFor="email">E-mail</label>
+          <input
+            type="email"
+            placeholder="Endereço de e-mail"
+            onChange={e => this.setState({ email: e.target.value })}
+          />
+          <label htmlFor="senha">Senha</label>
+          <input
+            type="password"
+            placeholder="Senha"
+            onChange={e => this.setState({ password: e.target.value })}
+          />
+          <button type="submit">Login</button>
+          <Link to="/register">Registre-se</Link>
+        </Form>
+      </Container>
     )
+  }
 }
+
+export default withRouter(Login)

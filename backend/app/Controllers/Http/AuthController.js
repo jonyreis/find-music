@@ -16,6 +16,8 @@ class AuthController {
 
         const token = await auth.attempt(email, password)
 
+        
+        console.log(token)
         return token
     }
 }

@@ -1,14 +1,11 @@
 import React from 'react';
 import Routes from './routes'
-import './App.css'
+import './Styles/App.css'
 
-function App() {
+export default function App() {
   return (
     <div className="container">
       <Routes />
     </div>
   )
- 
 }
-
-export default App

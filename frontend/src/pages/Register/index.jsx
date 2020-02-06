@@ -1,82 +1,65 @@
-import React from 'react'
+import React, { Component } from "react"
+import { Link, withRouter } from "react-router-dom"
 
-import { ErrorMessage, Formik, Form, Field } from 'formik'
-import * as yup from 'yup'
-import api from '../../services/api'
+import api from "../../services/api"
 
-import '../Login/styles.css'
+import { Form, Container } from "./styles"
 
 
-export default function Register({ history }) {
+class Register extends Component {
+  state = {
+    username: "",
+    email: "",
+    password: "",
+    error: ""
+  }
 
-    const handleSubmit = values => {
-        api.post('/register', values)
-            .then(resp => {
-                const { data } = resp
-                if (data) {
-                    history.push('/')
-                }
-            })
+  handleSignUp = async e => {
+    e.preventDefault()
+    const { username, email, password } = this.state
+    if (!username || !email || !password) {
+        this.setState({ error: "Preencha todos os dados para se cadastrar" })
+    } else {
+        try {
+            await api.post("/register", { username, email, password })
+            this.props.history.push("/")
+        } catch (err) {
+            console.log(err);
+            this.setState({ error: "Ocorreu um erro ao registrar sua conta." })
+        }
     }
+  }
 
-    const validations = yup.object().shape({
-        username: yup.string().required(),
-        email: yup.string().email().required(),
-        password: yup.string().min(6).required()
-    })
+  render() {
     return (
-        <>
-            <Formik
-                initialValues={{}}
-                onSubmit={handleSubmit}
-                validationSchema={validations}
-            >
-                <Form className="login">
-                    <strong>Registre-se</strong>
-                    <div className="login-group">
-                        <label>Username</label>
-                        <Field
-                            name="username"
-                            placeholder="Digite um username..."
-                            className="login-field"
-                        />
-                        <ErrorMessage
-                            component="span"
-                            name="username"
-                            className="login-error"
-                        />
-                    </div>
-                    <div className="login-group">
-                        <label>E-mail</label>
-                        <Field
-                            name="email"
-                            placeholder="Digite seu melhor e-mail..."
-                            className="login-field"
-                        />
-                        <ErrorMessage
-                            component="span"
-                            name="email"
-                            className="login-error"
-                        />
-                    </div>
-                    <div className="login-group">
-                        <label>Senha</label>
-                        <Field
-                            type="password"
-                            name="password"
-                            placeholder="Digite uma senha..."
-                            className="login-field"
-                        />
-                        <ErrorMessage
-                            component="span"
-                            name="password"
-                            className="login-error"
-                        />
-                    </div>
-                    <a href="/">Login</a>
-                    <button className="login-Btn" type="submit">Registrar</button>
-                </Form>
-            </Formik>
-        </>
+      <Container>
+        <Form onSubmit={this.handleSignUp}>
+          <h1>Find Music</h1>
+          {this.state.error && <p>{this.state.error}</p>}
+          <label htmlFor="usuario">Usuário</label>
+          <input
+            type="text"
+            placeholder="Nome de usuário"
+            onChange={e => this.setState({ username: e.target.value })}
+          />
+          <label htmlFor="email">E-mail</label>
+          <input
+            type="email"
+            placeholder="Endereço de e-mail"
+            onChange={e => this.setState({ email: e.target.value })}
+          />
+          <label htmlFor="senha">senha</label>
+          <input
+            type="password"
+            placeholder="Digite uma Senha"
+            onChange={e => this.setState({ password: e.target.value })}
+          />
+          <button type="submit">Registre-se</button>
+          <Link to="/">Fazer login</Link>
+        </Form>
+      </Container>
     )
+  }
 }
+
+export default  withRouter(Register)

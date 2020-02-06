@@ -1,8 +1,8 @@
 'use strict'
 
 class AppController {
-    index () {
-        return 'Hello Dev'
+    home() {
+        return 'http://localhost:3000/home'
     }
 }
 

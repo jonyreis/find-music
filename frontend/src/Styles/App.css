@@ -10,8 +10,3 @@ body, a, label, input, button {
     box-sizing: border-box;
 }
 
-.container {
-    display: flex;
-    margin: 10vh;
-    justify-content: center;
-}
